@@ -5,7 +5,7 @@ pr:
 - main
 
 variables:
-  solutionPath: 'Wpf 3/Wpf.sln'
+  solutionPath: 'src/Wpf.sln'
 
 pool:
   name: 'gcp1'
