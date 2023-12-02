@@ -30,12 +30,23 @@ jobs:
     displayName: 'Restore NuGet packages'
   - script: dotnet build --configuration Release $(solutionPath)
     displayName: 'Build the project'
+- job: Test
+  dependsOn: Build
+  displayName: 'Running test'
+  steps:
   - script: dotnet test --configuration Release --no-build $(solutionPath)
     displayName: 'Run tests'
+- job: Run
+  dependsOn: Test
+  displayName: 'Running app'
+  steps:
+  - script: dotnet run --configuration Release --no-build $(solutionPath)
+    displayName: 'Build run'
 
 - job: Deploy
+  dependsOn: Run
   displayName: 'Deploy job'
   condition: succeeded()
   steps:
-  - script: echo 'Deploying...'
-    displayName: 'Deployment step'
+  - script: dotnet publish --configuration Release --no-build $(solutionPath)
+    displayName: 'Deploy'
