@@ -10,7 +10,7 @@ pool:
   name: 'aws1'
 
 variables:
-  solution: 'src\Wpf.sln'
+  solution: 'src/Wpf.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
@@ -26,10 +26,11 @@ steps:
     command: 'restore'
     feedsToUse: 'select'
     vstsFeed: 'my-vsts-feed' # A series of numbers and letters
-    arguments: '$(solution)'
+    solution: '$(solution)'
   displayName: 'dotnet restore $(solution)'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    arguments: '$(solution) --configuration $(buildConfiguration) '
+    solution: '$(solution)'
+    arguments: '--configuration $(buildConfiguration) '
   displayName: 'dotnet build $(solution) $(buildConfiguration)'
