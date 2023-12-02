@@ -30,8 +30,8 @@ jobs:
     displayName: 'Restore NuGet packages'
   - script: dotnet build --configuration Release $(solutionPath)
     displayName: 'Build the project'
-  - script: dotnet run --configuration Release --project ./src/WpfApp/WpfApp.csproj
-    displayName: 'Build run'  
+  # - script: dotnet run --configuration Release --project ./src/WpfApp/WpfApp.csproj
+  #   displayName: 'Build run'  
 - job: Test
   dependsOn: Build
   displayName: 'Running test'
