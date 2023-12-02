@@ -56,5 +56,5 @@ jobs:
       version: 6.x
       performMultiLevelLookup: true
       includePreviewVersions: true # Required for preview versions
-  - script: dotnet publish --configuration Release --no-build $(solutionPath)
+  - script: dotnet publish --configuration Release $(solutionPath)
     displayName: 'Deploy'
