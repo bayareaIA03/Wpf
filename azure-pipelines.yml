@@ -6,30 +6,36 @@
 trigger:
 - main
 
+pr:
+- main
+
 pool:
   name: 'aws1'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  solutionPath: 'src/Wpf.sln'
 
-steps:
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK'
-  inputs:
-    version: 6.x
-    performMultiLevelLookup: true
-    includePreviewVersions: true # Required for preview versions
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    feedsToUse: 'select'
-    vstsFeed: 'my-vsts-feed' # A series of numbers and letters
-    arguments: '$(solution)'
-  displayName: 'dotnet restore $(solution)'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(buildConfiguration) $(solution)'
-  displayName: 'dotnet build $(buildConfiguration) $(solution)'
+jobs:
+- job: Build
+  displayName: 'Build job'
+  steps:
+  - checkout: self
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 6.x
+      performMultiLevelLookup: true
+      includePreviewVersions: true # Required for preview versions
+  - script: dotnet restore $(solutionPath)
+    displayName: 'Restore NuGet packages'
+  - script: dotnet build --configuration Release $(solutionPath)
+    displayName: 'Build the project'
+  - script: dotnet test --configuration Release --no-build $(solutionPath)
+    displayName: 'Run tests'
+
+- job: Deploy
+  displayName: 'Deploy job'
+  condition: succeeded()
+  steps:
+  - script: echo 'Deploying...'
+    displayName: 'Deployment step'
