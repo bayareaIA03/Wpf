@@ -54,7 +54,7 @@ jobs:
       version: 6.x
       performMultiLevelLookup: true
       includePreviewVersions: true # Required for preview versions
-  - script: dotnet run --configuration Release --no-build $(solutionPath)
+  - script: dotnet run --configuration Release --no-build --project ./src/WpfApp/WpfApp.csproj
     displayName: 'Build run'
 
 - job: Deploy
