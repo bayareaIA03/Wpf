@@ -46,7 +46,7 @@ jobs:
     displayName: 'Run tests'
     
 - job: Deploy
-  dependsOn: Run
+  dependsOn: Test
   displayName: 'Deploy job'
   condition: succeeded()
   steps:
