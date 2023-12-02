@@ -30,16 +30,30 @@ jobs:
     displayName: 'Restore NuGet packages'
   - script: dotnet build --configuration Release $(solutionPath)
     displayName: 'Build the project'
+    
 - job: Test
   dependsOn: Build
   displayName: 'Running test'
   steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 6.x
+      performMultiLevelLookup: true
+      includePreviewVersions: true # Required for preview versions
   - script: dotnet test --configuration Release --no-build $(solutionPath)
     displayName: 'Run tests'
+    
 - job: Run
   dependsOn: Test
   displayName: 'Running app'
   steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 6.x
+      performMultiLevelLookup: true
+      includePreviewVersions: true # Required for preview versions
   - script: dotnet run --configuration Release --no-build $(solutionPath)
     displayName: 'Build run'
 
@@ -48,5 +62,11 @@ jobs:
   displayName: 'Deploy job'
   condition: succeeded()
   steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 6.x
+      performMultiLevelLookup: true
+      includePreviewVersions: true # Required for preview versions
   - script: dotnet publish --configuration Release --no-build $(solutionPath)
     displayName: 'Deploy'
