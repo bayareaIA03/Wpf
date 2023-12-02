@@ -10,7 +10,7 @@ pool:
   name: 'aws1'
 
 variables:
-  solution: 'src/Wpf.sln'
+  solution: 'src\Wpf.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
