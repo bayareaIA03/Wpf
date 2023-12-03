@@ -2,6 +2,7 @@
 # Build and test ASP.NET projects.
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
 trigger:
 - main
 
@@ -16,7 +17,7 @@ variables:
 
 jobs:
 - job: Build
-  displayName: 'Build job'
+  displayName: 'Build and Run'
   steps:
   - checkout: self
   - task: UseDotNet@2
@@ -29,7 +30,8 @@ jobs:
     displayName: 'Restore NuGet packages'
   - script: dotnet build --configuration Release $(solutionPath)
     displayName: 'Build the project'
-    
+  # - script: dotnet run --configuration Release --project ./src/WpfApp/WpfApp.csproj
+  #   displayName: 'Build run'  
 - job: Test
   dependsOn: Build
   displayName: 'Running test'
@@ -43,21 +45,8 @@ jobs:
   - script: dotnet test --configuration Release --no-build $(solutionPath)
     displayName: 'Run tests'
     
-- job: Run
-  dependsOn: Test
-  displayName: 'Running app'
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
-    inputs:
-      version: 6.x
-      performMultiLevelLookup: true
-      includePreviewVersions: true # Required for preview versions
-  - script: dotnet run --configuration Release --no-build --project ./src/WpfApp/WpfApp.csproj
-    displayName: 'Build run'
-
 - job: Deploy
-  dependsOn: Run
+  dependsOn: Test
   displayName: 'Deploy job'
   condition: succeeded()
   steps:
@@ -67,5 +56,5 @@ jobs:
       version: 6.x
       performMultiLevelLookup: true
       includePreviewVersions: true # Required for preview versions
-  - script: dotnet publish --configuration Release --no-build $(solutionPath)
+  - script: dotnet publish --configuration Release $(solutionPath)
     displayName: 'Deploy'
