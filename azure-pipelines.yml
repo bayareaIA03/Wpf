@@ -17,7 +17,7 @@ variables:
 
 jobs:
 - job: Build
-  displayName: 'Build and Run'
+  displayName: 'Build'
   steps:
   - checkout: self
   - task: UseDotNet@2
@@ -50,7 +50,7 @@ jobs:
   dependsOn: Test
   displayName: 'Running app'
   steps:
-  - script: dotnet run --configuration Release --no-build $(solutionPath)
+  - script: dotnet run --configuration Release --project ./src/WpfApp/WpfApp.csproj
     displayName: 'Build run'
     
 - job: Deploy
