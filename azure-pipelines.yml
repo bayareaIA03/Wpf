@@ -30,8 +30,9 @@ jobs:
     displayName: 'Restore NuGet packages'
   - script: dotnet build --configuration Release $(solutionPath)
     displayName: 'Build the project'
-  - script: dotnet run --configuration Release --project ./src/WpfApp/WpfApp.csproj
-    displayName: 'Build run'  
+  # - script: dotnet run --configuration Release --project ./src/WpfApp/WpfApp.csproj
+  #   displayName: 'Build run' 
+    
 - job: Test
   dependsOn: Build
   displayName: 'Running test'
@@ -44,9 +45,16 @@ jobs:
       includePreviewVersions: true # Required for preview versions
   - script: dotnet test --configuration Release --no-build $(solutionPath)
     displayName: 'Run tests'
+
+- job: Run
+  dependsOn: Test
+  displayName: 'Running app'
+  steps:
+  - script: dotnet run --configuration Release --no-build $(solutionPath)
+    displayName: 'Build run'
     
 - job: Deploy
-  dependsOn: Test
+  dependsOn: Run
   displayName: 'Deploy job'
   condition: succeeded()
   steps:
